@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="de" id="lang">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GIF Battle – Mega Cool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gnu.org" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --tropical-green: #00d1b2;
+      --tropical-dark: #00695c;
+      --tropical-light: #b2f5ea;
+      --white: #fff;
+      --black: #0a0a0a;
+      --accent-yellow: #ffeb3b;
+    }
+    body {
+      background-color: var(--tropical-light);
+      color: var(--black);
+      font-family: 'Press Start 2P', cursive;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background-color: var(--tropical-green);
+      color: var(--white);
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .language-selector {
+      display: flex;
+      gap: 10px;
+    }
+    .language-selector button {
+      background-color: var(--tropical-dark);
+      color: var(--white);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      font-family: 'Press Start 2P', cursive;
+      cursor: pointer;
+    }
+    main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .hero {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: var(--tropical-dark);
+    }
+    .hero h1 {
+      font-size: 3rem;
+      margin: 0.5rem 0;
+      color: var(--tropical-green);
+    }
+    .game-info {
+      background-color: var(--white);
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .btn {
+      background-color: var(--tropical-green);
+      color: var(--white);
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-family: 'Press Start 2P', cursive;
+      cursor: pointer;
+      font-size: 1rem;
+      margin: 1rem 0;
+      transition: background-color 0.2s;
+    }
+    .btn:hover {
+      background-color: var(--tropical-dark);
+    }
+    .btn-accent {
+      background-color: var(--accent-yellow);
+      color: var(--black);
+    }
+    .btn-accent:hover {
+      background-color: #fbc02d;
+    }
+    .name-input {
+      font-family: 'Press Start 2P', cursive;
+      padding: 1rem;
+      border: 2px solid var(--tropical-green);
+      border-radius: 8px;
+      margin: 1rem 0;
+      width: 300px;
+      max-width: 100%;
+    }
+    .timer {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background-color: var(--tropical-dark);
+      color: var(--white);
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .sandglass {
+      width: 24px;
+      height: 24px;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23fff" d="M6 2v6l4 4-4 4v6h12v-6l-4-4 4-4V2H6zm10 14.5V20H8v-3.5l4-4 4 4zm-4-5l-4-4V4h8v3.5l-4 4z"/></svg>') no-repeat;
+      animation: shake 2s infinite;
+    }
+    @keyframes shake {
+      0% { transform: rotate(-5deg); }
+      50% { transform: rotate(5deg); }
+      100% { transform: rotate(-5deg); }
+    }
+    .emoji-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .emoji-item {
+      background-color: var(--white);
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+      font-size: 2rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .emoji-item:hover {
+      transform: scale(1.1);
+      background-color: var(--tropical-light);
+    }
+    .voting-item {
+      background-color: var(--white);
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .voting-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+    .voting-buttons button {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      background-color: var(--white);
+      border-radius: 10px;
+    }
+    .result-table th, .result-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--tropical-light);
+    }
+    .result-table th {
+      background-color: var(--tropical-green);
+      color: var(--white);
+    }
+    .result-table tr:nth-child(even) {
+      background-color: var(--tropical-light);
+    }
+    footer {
+      background-color: var(--tropical-dark);
+      color: var(--white);
+      text-align: center;
+      padding: 1rem;
+      margin-top: auto;
+      font-size: 0.8rem;
+    }
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="title">GIF Battle</h1>
+    <div class="language-selector">
+      <button id="de">DE</button>
+      <button id="en">EN</button>
+    </div>
+  </header>
+  <main>
+    <section id="welcome" class="game-info">
+      <div id="welcome-text">
+        <h2>Willkommen beim GIF Battle!</h2>
+        <p>Gib deinen Namen ein, um zu starten:</p>
+        <input type="text" id="playerName" class="name-input" placeholder="Dein Name">
+        <button id="startGame" class="btn">Spiel starten</button>
+      </div>
+    </section>
+
+    <section id="hostRoom" class="game-info hidden">
+      <h2 id="host-text">Raum hosten</h2>
+      <p id="host-desc">Lade Freunde ein, indem du diesen Code weitergibst:</p>
+      <div id="roomCode">ke5hD</div>
+      <button id="startRound" class="btn hidden">Runde starten</button>
+    </section>
+
+    <section id="prompt" class="game-info hidden">
+      <h2 id="prompt-text">Prompt</h2>
+      <div id="promptQuestion">❓ „Wie fühlt sich Montagmorgen an?“</div>
+      <div id="timer" class="timer hidden">
+        <span id="timeLeft">30</span>
+        <div class="sandglass"></div>
+      </div>
+      <p id="choose-emoji">Wähle ein Emoji:</p>
+      <div class="emoji-grid" id="emojiGrid"></div>
+    </section>
+
+    <section id="voting" class="game-info hidden">
+      <h2 id="voting-text">Abstimmung</h2>
+      <div id="votingItems"></div>
+    </section>
+
+    <section id="results" class="game-info hidden">
+      <h2 id="results-text">Ergebnisse</h2>
+      <table class="result-table">
+        <thead>
+          <tr>
+            <th id="rank-header">Platz</th>
+            <th id="name-header">Name</th>
+            <th id="votes-header">Daumen hoch</th>
+          </tr>
+        </thead>
+        <tbody id="resultBody"></tbody>
+      </table>
+      <button id="nextRound" class="btn">Noch eine Runde</button>
+      <button id="showResults" class="btn btn-accent">Ergebnis anzeigen</button>
+    </section>
+  </main>
+  <footer>
+    Von: Anton Benseler
+  </footer>
+  <script>
+    // Sprache und Texte
+    const texts = {
+      de: {
+        title: "GIF Battle",
+        welcome: "Willkommen beim GIF Battle!",
+        namePrompt: "Gib deinen Namen ein, um zu starten:",
+        startGame: "Spiel starten",
+        host: "Raum hosten",
+        hostDesc: "Lade Freunde ein, indem du diesen Code weitergibst:",
+        prompt: "Prompt",
+        chooseEmoji: "Wähle ein Emoji:",
+        voting: "Abstimmung",
+        results: "Ergebnisse",
+        rank: "Platz",
+        name: "Name",
+        votes: "Daumen hoch",
+        nextRound: "Noch eine Runde",
+        showResults: "Ergebnis anzeigen",
+        promptExamples: [
+          "❓ „Wie fühlt sich Montagmorgen an?“",
+          "❓ „Wenn du aus Versehen auf 'Antworten an alle' klickst…“",
+          "❓ „Wenn dein Crush dich ghostet…“"
+        ]
+      },
+      en: {
+        title: "GIF Battle",
+        welcome: "Welcome to GIF Battle!",
+        namePrompt: "Enter your name to start:",
+        startGame: "Start Game",
+        host: "Host Room",
+        hostDesc: "Invite friends by sharing this code:",
+        prompt: "Prompt",
+        chooseEmoji: "Choose an emoji:",
+        voting: "Voting",
+        results: "Results",
+        rank: "Rank",
+        name: "Name",
+        votes: "Upvotes",
+        nextRound: "Next Round",
+        showResults: "Show Results",
+        promptExamples: [
+          "❓ „How does Monday morning feel?“",
+          "❓ „When you accidentally hit 'Reply All'…“",
+          "❓ „When your crush ghosts you…“"
+        ]
+      }
+    };
+
+    let currentLang = 'de';
+    let playerName = '';
+    let selectedEmoji = '';
+    let timerInterval;
+    let timeLeft = 30;
+
+    // Sprache umstellen
+    document.getElementById('de').addEventListener('click', function() {
+      currentLang = 'de';
+      updateTexts();
+    });
+    document.getElementById('en').addEventListener('click', function() {
+      currentLang = 'en';
+      updateTexts();
+    });
+
+    function updateTexts() {
+      const lang = texts[currentLang];
+      document.getElementById('title').textContent = lang.title;
+      document.getElementById('welcome-text').querySelector('h2').textContent = lang.welcome;
+      document.getElementById('welcome-text').querySelector('p').textContent = lang.namePrompt;
+      document.getElementById('playerName').placeholder = currentLang === 'de' ? 'Dein Name' : 'Your Name';
+      document.getElementById('startGame').textContent = lang.startGame;
+      document.getElementById('host-text').textContent = lang.host;
+      document.getElementById('host-desc').textContent = lang.hostDesc;
+      document.getElementById('prompt-text').textContent = lang.prompt;
+      document.getElementById('choose-emoji').textContent = lang.chooseEmoji;
+      document.getElementById('voting-text').textContent = lang.voting;
+      document.getElementById('results-text').textContent = lang.results;
+      document.getElementById('rank-header').textContent = lang.rank;
+      document.getElementById('name-header').textContent = lang.name;
+      document.getElementById('votes-header').textContent = lang.votes;
+      document.getElementById('nextRound').textContent = lang.nextRound;
+      document.getElementById('showResults').textContent = lang.showResults;
+    }
+
+    // Namen eingeben
+    document.getElementById('startGame').addEventListener('click', function() {
+      playerName = document.getElementById('playerName').value.trim();
+      if (playerName) {
+        document.getElementById('welcome').classList.add('hidden');
+        document.getElementById('hostRoom').classList.remove('hidden');
+        document.getElementById('startRound').classList.remove('hidden');
+      }
+    });
+
+    // Raum starten
+    document.getElementById('startRound').addEventListener('click', function() {
+      document.getElementById('hostRoom').classList.add('hidden');
+      document.getElementById('prompt').classList.remove('hidden');
+      startPrompt();
+    });
+
+    // Prompt starten
+    function startPrompt() {
+      const lang = texts[currentLang];
+      const prompt = lang.promptExamples[Math.floor(Math.random() * lang.promptExamples.length)];
+      document.getElementById('promptQuestion').textContent = prompt;
+      document.getElementById('timer').classList.remove('hidden');
+      timeLeft = 30;
+      document.getElementById('timeLeft').textContent = timeLeft;
+      clearInterval(timerInterval);
+      timerInterval = setInterval(updateTimer, 1000);
+      renderEmojis();
+    }
+
+    // Timer
+    function updateTimer() {
+      timeLeft--;
+      document.getElementById('timeLeft').textContent = timeLeft;
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        document.getElementById('prompt').classList.add('hidden');
+        document.getElementById('voting').classList.remove('hidden');
+        simulateVoting();
+      }
+    }
+
+    // Emojis anzeigen
+    function renderEmojis() {
+      const emojiGrid = document.getElementById('emojiGrid');
+      emojiGrid.innerHTML = '';
+      const emojis = ['😂', '😭', '🤔', '😎', '😱', '🙄', '🤯', '😍', '😡', '🥳'];
+      emojis.forEach(emoji => {
+        const emojiItem = document.createElement('div');
+        emojiItem.className = 'emoji-item';
+        emojiItem.textContent = emoji;
+        emojiItem.addEventListener('click', function() {
+          selectedEmoji = emoji;
+          // Hier könnte man das Emoji an den Server schicken (simuliert)
+          clearInterval(timerInterval);
+          document.getElementById('prompt').classList.add('hidden');
+          document.getElementById('voting').classList.remove('hidden');
+          simulateVoting();
+        });
+        emojiGrid.appendChild(emojiItem);
+      });
+    }
+
+    // Voting simulieren (für Demo)
+    function simulateVoting() {
+      const votingItems = document.getElementById('votingItems');
+      votingItems.innerHTML = '';
+      const names = [playerName, 'Max', 'Anna', 'Lena', 'Tim'];
+      names.forEach(name => {
+        const item = document.createElement('div');
+        item.className = 'voting-item';
+        item.innerHTML = `
+          <span>${name}: 😂</span>
+          <div class="voting-buttons">
+            <button>👍</button>
+            <button>👎</button>
+          </div>
+        `;
+        votingItems.appendChild(item);
+      });
+      // Nach 10 Sekunden Ergebnisse anzeigen
+      setTimeout(() => {
+        document.getElementById('voting').classList.add('hidden');
+        document.getElementById('results').classList.remove('hidden');
+        showResults();
+      }, 10000);
+    }
+
+    // Ergebnisse anzeigen
+    function showResults() {
+      const resultBody = document.getElementById('resultBody');
+      resultBody.innerHTML = '';
+      const results = [
+        { name: playerName, votes: 5 },
+        { name: 'Max', votes: 3 },
+        { name: 'Anna', votes: 4 },
+        { name: 'Lena', votes: 2 },
+        { name: 'Tim', votes: 1 }
+      ];
+      results.sort((a, b) => b.votes - a.votes);
+      results.forEach((result, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${result.name}</td>
+          <td>${result.votes}</td>
+        `;
+        resultBody.appendChild(row);
+      });
+    }
+
+    // Noch eine Runde
+    document.getElementById('nextRound').addEventListener('click', function() {
+      document.getElementById('results').classList.add('hidden');
+      document.getElementById('prompt').classList.remove('hidden');
+      startPrompt();
+    });
+
+    // Ergebnis anzeigen
+    document.getElementById('showResults').addEventListener('click', function() {
+      // Hier könnte man zur Übersicht zurückkehren
+      alert('Ergebnis wurde angezeigt!');
+    });
+
+    // Initialisierung
+    updateTexts();
+  </script>
+</body>
+</html>
